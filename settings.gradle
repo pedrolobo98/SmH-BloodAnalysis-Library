@@ -1,0 +1,3 @@
+rootProject.name = "SmH-BloodAnalysis-Library"
+include ':app'
+include ':SmH-BloodAnalysis-Library'
