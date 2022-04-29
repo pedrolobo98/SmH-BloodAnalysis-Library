@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id "maven-publish"
+    id 'signing'
 }
 
 android {
@@ -36,7 +38,7 @@ android {
 }
 def camerax_version = "1.0.2"
 dependencies {
-
+    implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
@@ -56,4 +58,55 @@ dependencies {
 
     //Read PDF
     implementation 'com.tom-roush:pdfbox-android:2.0.17.0'
+}
+
+group = "io.github.pedrolobo98"
+version = "1.0.12"
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                pom {
+                    name = 'SmH-BloodAnalysis-Library'
+                    description = 'A library to extract blood compounds and their concentrations from blood analysis documents (physical documents, scanned PDFs, digitally created PDFs and images).'
+                    url = 'https://github.com/pedrolobo98/SmH-BloodAnalysis-Library'
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'pedrolobo98'
+                            name = 'Pedro Lobo'
+                            email = 'a13294@alunos.ipca.pt'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git:github.com/pedrolobo98/SmH-BloodAnalysis-Library.git'
+                        developerConnection = 'scm:git:ssh://github.com/pedrolobo98/SmH-BloodAnalysis-Library.git'
+                        url = 'https://github.com/pedrolobo98/SmH-BloodAnalysis-Library/'
+                    }
+                }
+            }
+        }
+    }
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl = uri("https://s01.oss.sonatype.org/service/local/")
+            snapshotRepositoryUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+            username = "bYnowLLn"
+            password = "gLoPBQEGkYuzxjshJkK/UZmu8DI3F2/onqNydDjWqDyY"
+        }
+    }
+
+}
+signing {
+    sign publishing.publications
 }

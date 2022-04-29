@@ -15,10 +15,7 @@ buildscript {
 }
 
 plugins {
-    id "java-library"
-    id "maven-publish"
     id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
-    id 'signing'
 }
 
 allprojects {
@@ -26,52 +23,4 @@ allprojects {
         google()
         mavenCentral()
     }
-}
-
-group = "io.github.pedrolobo98"
-version = "1.0.9"
-
-nexusPublishing {
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from(components.java)
-                pom {
-                    name = 'SmH-BloodAnalysis-Library'
-                    description = 'A library to extract blood compounds and their concentrations from blood analysis documents (physical documents, scanned PDFs, digitally created PDFs and images).'
-                    url = 'https://github.com/pedrolobo98/SmH-BloodAnalysis-Library'
-                    licenses {
-                        license {
-                            name = 'The Apache License, Version 2.0'
-                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        }
-                    }
-                    developers {
-                        developer {
-                            id = 'pedrolobo98'
-                            name = 'Pedro Lobo'
-                            email = 'a13294@alunos.ipca.pt'
-                        }
-                    }
-                    scm {
-                        connection = 'scm:git:github.com/pedrolobo98/SmH-BloodAnalysis-Library.git'
-                        developerConnection = 'scm:git:ssh://github.com/pedrolobo98/SmH-BloodAnalysis-Library.git'
-                        url = 'https://github.com/pedrolobo98/SmH-BloodAnalysis-Library/'
-                    }
-                }
-            }
-        }
-    }
-    repositories {
-        sonatype {
-            nexusUrl = uri("https://s01.oss.sonatype.org/service/local/")
-            snapshotRepositoryUrl = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-            username = "bYnowLLn"
-            password = "gLoPBQEGkYuzxjshJkK/UZmu8DI3F2/onqNydDjWqDyY"
-        }
-    }
-
-}
-signing {
-    sign publishing.publications.mavenJava
 }
