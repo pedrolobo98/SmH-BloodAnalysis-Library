@@ -29,17 +29,17 @@ allprojects {
 }
 
 group = "io.github.pedrolobo98"
-version = "1.0.8"
+version = "1.0.9"
 
 nexusPublishing {
     publishing {
         publications {
             mavenJava(MavenPublication) {
+                from(components.java)
                 pom {
                     name = 'SmH-BloodAnalysis-Library'
                     description = 'A library to extract blood compounds and their concentrations from blood analysis documents (physical documents, scanned PDFs, digitally created PDFs and images).'
                     url = 'https://github.com/pedrolobo98/SmH-BloodAnalysis-Library'
-                    packaging = 'aar'
                     licenses {
                         license {
                             name = 'The Apache License, Version 2.0'
