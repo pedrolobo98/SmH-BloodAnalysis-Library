@@ -29,7 +29,7 @@ allprojects {
 }
 
 group = "io.github.pedrolobo98"
-version = "1.0.7"
+version = "1.0.8"
 
 nexusPublishing {
     publishing {
