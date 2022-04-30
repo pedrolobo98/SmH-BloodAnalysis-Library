@@ -72,3 +72,62 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
     }
 }
 ```
+### 2. Digitally Created and Scanned PDFs
+Add the following permission in the manifest file.
+```
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+```
+Resquest Permission.
+```
+override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    when(requestCode){
+        PERMISSION_CODE -> {
+            if( grantResults.size > 0 && grantResults[0]== PackageManager.PERMISSION_GRANTED){
+                pickImage()
+            }else{
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+}
+```
+Load a Image from your storage.
+```
+fun loadImg(view: View){
+    if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED){
+            val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+            requestPermissions(permissions, PERMISSION_CODE)
+        }else{
+            pickImage()
+        }
+    }else{
+        pickImage()
+    }
+}
+
+fun pickImage(){
+    val intent = Intent(Intent.ACTION_PICK)
+    intent.type = "image/*"
+    startActivityForResult(intent, IMAGE_PICK_CODE)
+}
+```
+To receive the information extracted in the initial activity and present it in a TextView.
+```
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+  if (resultCode == Activity.RESULT_OK && requestCode == IMAGE_PICK_CODE){
+        var uri = data?.data
+        val image = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+        val builder = StringBuilder()
+        textExtraction.realTimeProcess(image, 0) { hash ->
+            var hashMap = hash
+            if (hashMap.isEmpty()){
+               txtView.setText("Nothing Detected")
+            }else{
+                hashMap?.forEach{key,value -> builder.append("\n$key : $value") }
+                txtView.text = builder.toString()}
+        }
+    }
+}
+```
