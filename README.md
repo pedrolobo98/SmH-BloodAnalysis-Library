@@ -21,7 +21,7 @@ Add the following permission in the manifest file.
 ```
 <uses-permission android:name="android.permission.CAMERA" />
 ```
-Start the activity responsible for camera live mode from your activity
+Start the activity responsible for camera live mode from your activity.
 ```
 val intent = Intent(this, CameraActivity::class.java)
 val activityName = this::class.java.name
@@ -33,18 +33,42 @@ To receive the information extracted in the initial activity and present it in a
 override fun onResume() {
         super.onResume()
 
-        if (intent.getSerializableExtra(Utils().savedUri) != null){
-            val hashMap = intent.getSerializableExtra(Utils().savedUri) as HashMap<String, String>?
+    if (intent.getSerializableExtra(Utils().savedUri) != null){
+        val hashMap = intent.getSerializableExtra(Utils().savedUri) as HashMap<String, String>?
+        val builder = StringBuilder()
+        hashMap?.forEach{key,value -> builder.append("\n$key : $value")}
+        txtView.text = builder.toString()
+    }
+}
+```
+### 2. Digitally Created and Scanned PDFs
+Add the following permission in the manifest file.
+```
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+```
+Load a PDF from your storage.
+```
+fun loadPdf(view: View){
+    val browseStorage = Intent(Intent.ACTION_GET_CONTENT)
+    browseStorage.type = "application/pdf"
+    browseStorage.addCategory(Intent.CATEGORY_OPENABLE)
+    startActivityForResult(Intent.createChooser(browseStorage, "Select PDF"), 100)
+}
+```
+To receive the information extracted in the initial activity and present it in a TextView.
+```
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+    if (requestCode == 100 && resultCode == Activity.RESULT_OK && data != null){
+        val selectedPdf = data.data
 
+        selectedPdf?.let {
             val builder = StringBuilder()
-
-            // Loop through the linked hash map
-            hashMap?.forEach{key,value ->
-                builder.append("\n$key : $value")
-            }
-            txtView.text = builder.toString()
+            textExtraction.processPdfBox(it) { hash ->
+                var hashMap = hash
+                hashMap?.forEach{key,value -> builder.append("\n$key : $value") }
+                txtView.text = builder.toString()}
         }
     }
+}
 ```
-
-
