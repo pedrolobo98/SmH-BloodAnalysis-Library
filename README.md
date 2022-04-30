@@ -5,7 +5,12 @@ SmH-BloodAnalysis-Library is an android library for extracting blood compounds a
 
 ![Imagem1](https://user-images.githubusercontent.com/57667127/166104846-6777438c-ed9c-4735-b8ce-e48ed0294b92.png)
 
-## Integrating
+## Integration
 
+```
+dependencies {
+   implementation 'io.github.pedrolobo98:SmH-BloodAnalysis-Library:1.0.12'
+}
+```
 
 
